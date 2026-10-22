@@ -8,11 +8,12 @@ com tema Nimbus e motor de referência LABSEC/UFSC 2.7.
 
 RECURSOS
 
-- Selecione um arquivo ou arraste-o para a janela para iniciar a validação.
+- Selecione um PDF ou arraste-o para a janela para iniciar a validação.
+- Outros formatos são rejeitados tanto na seleção quanto no arrastar e soltar.
 - Consulte o resumo, os dados do signatário e o resultado por assinatura.
-- Verifique PDF/PAdES, XML/XMLDSig/XAdES e CMS/CAdES, conforme o suporte do motor.
-- Vincule o documento original de assinaturas destacadas pelo menu Opções.
-- Exporte o resultado em PDF, HTML, XML ou JSON.
+- A interface verifica PDF/PAdES. O motor mantém outros formatos para integrações.
+- Abra o repositório do projeto pelo link no rodapé.
+- A camada de serviços permite exportação em PDF, HTML, XML ou JSON.
 - Atualize as raízes e o pacote de intermediárias do repositório oficial do ITI.
 
 REQUISITOS
@@ -67,7 +68,8 @@ No Windows, os dados ficam em:
 
 As raízes de confiança ficam em trust-anchors. O pacote de intermediárias fica
 em intermediates. Também existem pastas de cache, repositório e logs.
-O menu Opções permite atualizar certificados e consultar os caminhos locais.
+A interface prepara automaticamente as raízes ausentes e o pacote de
+intermediárias ainda não instalado. Não existe menu de opções nesta tela.
 
 Para escolher outra pasta de dados:
 
@@ -90,7 +92,9 @@ LIMITES
 
 - Um arquivo por vez, com limite de 100 MB por arquivo.
 - Os arquivos originais não são modificados nem enviados ao serviço web do ITI.
-- O resultado atual fica em memória; exporte-o antes de escolher outro arquivo.
+- O resultado atual fica em memória e é substituído ao escolher outro arquivo.
+- Associação de originais destacados e exportação são recursos da camada de
+  serviços e não possuem controles na interface atual.
 - A falta de cadeia ou dados de revogação pode impedir uma conclusão.
 - O aplicativo é independente e não é o serviço oficial ou homologado do ITI.
 - O suporte depende do motor e dos algoritmos disponíveis. A cadeia v7/Ed521

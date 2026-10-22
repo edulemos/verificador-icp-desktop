@@ -25,7 +25,7 @@ class AutomaticValidationTest {
         Files.write(paths.anchors().resolve("test-root.crt"), fixture.root.getEncoded());
         // Keep this UI regression offline; package integration is covered separately.
         try (var zip = new java.util.zip.ZipOutputStream(Files.newOutputStream(paths.intermediates().resolve("iti-ac-vigente.zip")))) { }
-        var selected = new VerificationInput(Files.writeString(temporary.resolve("documento.xml"), "conteudo"), null);
+        var selected = new VerificationInput(Files.writeString(temporary.resolve("documento.PDF"), "conteudo"), null);
         var entered = new CountDownLatch(1);
         var finish = new CountDownLatch(1);
         var failure = new AtomicReference<Throwable>();
@@ -40,20 +40,11 @@ class AutomaticValidationTest {
                     assertTrue(finish.await(5, TimeUnit.SECONDS));
                     return completed;
                 } catch (Throwable error) { failure.set(error); throw new IllegalStateException(error); }
-            }, new TrustAnchorService(paths), new ReportExportService(), paths);
+            }, new TrustAnchorService(paths), paths);
             window.set(frame);
-            assertEquals(1, countButtons(frame.getContentPane()));
             frame.displayResult(new VerificationResult(new VerificationInput(temporary.resolve("anterior.pdf"), null), VerificationStatus.NOT_VERIFIED, "Anterior", List.of(), null, Instant.now(), 1));
             var target = pane(frame.getContentPane());
-            var transfer = new java.awt.datatransfer.Transferable() {
-                public java.awt.datatransfer.DataFlavor[] getTransferDataFlavors() {
-                    return new java.awt.datatransfer.DataFlavor[]{java.awt.datatransfer.DataFlavor.javaFileListFlavor};
-                }
-                public boolean isDataFlavorSupported(java.awt.datatransfer.DataFlavor flavor) {
-                    return java.awt.datatransfer.DataFlavor.javaFileListFlavor.equals(flavor);
-                }
-                public Object getTransferData(java.awt.datatransfer.DataFlavor flavor) { return List.of(selected.signature().toFile()); }
-            };
+            var transfer = files(selected.signature().toFile());
             var support = new TransferHandler.TransferSupport(target, transfer);
             assertTrue(target.getTransferHandler().canImport(support));
             assertTrue(target.getTransferHandler().importData(support));
@@ -73,7 +64,7 @@ class AutomaticValidationTest {
             assertNull(failure.get());
             SwingUtilities.invokeAndWait(() -> {
                 String html = pane(window.get().getContentPane()).getText();
-                assertTrue(html.contains("documento.xml"));
+                assertTrue(html.contains("documento.PDF"));
                 assertTrue(html.contains("Sem assinatura digital"));
                 assertFalse(html.contains("anterior.pdf"));
             });
@@ -82,13 +73,37 @@ class AutomaticValidationTest {
             SwingUtilities.invokeAndWait(() -> window.get().dispose());
         }
     }
-    private static int countButtons(Container container) {
-        int count = 0;
-        for (Component child : container.getComponents()) {
-            if (child instanceof JButton button && button.getText() != null && !button.getText().isBlank()) count++;
-            if (child instanceof Container nested) count += countButtons(nested);
-        }
-        return count;
+    @Test void rejectsOtherExtensionsFromDragAndSelectionWithoutStartingValidation() throws Exception {
+        var paths = new AppPaths(temporary.resolve("data")); paths.initialize();
+        var calls = new java.util.concurrent.atomic.AtomicInteger();
+        SwingUtilities.invokeAndWait(() -> {
+            var frame = new SwingMainFrame(input -> { calls.incrementAndGet(); throw new AssertionError("Arquivo não PDF chegou ao motor"); }, new TrustAnchorService(paths), paths);
+            try {
+                var target = pane(frame.getContentPane());
+                var select = SwingMainFrame.class.getDeclaredMethod("validateFile", VerificationInput.class);
+                select.setAccessible(true);
+                for (String name : List.of("documento.xml", "documento.txt", "documento.pdf.exe", "assinatura.p7s", "sem-extensao")) {
+                    var file = Files.writeString(temporary.resolve(name), "conteudo").toFile();
+                    assertFalse(target.getTransferHandler().importData(new TransferHandler.TransferSupport(target, files(file))), name);
+                    assertEquals(false, select.invoke(frame, new VerificationInput(file.toPath(), null)), name);
+                }
+                assertEquals(0, calls.get());
+                assertTrue(frame.getRootPane().getDefaultButton().isEnabled());
+                assertTrue(target.getText().contains("Nenhum arquivo selecionado"));
+            } catch (Exception error) { throw new RuntimeException(error); }
+            finally { frame.dispose(); }
+        });
+    }
+    private static java.awt.datatransfer.Transferable files(java.io.File... files) {
+        return new java.awt.datatransfer.Transferable() {
+            public java.awt.datatransfer.DataFlavor[] getTransferDataFlavors() {
+                return new java.awt.datatransfer.DataFlavor[]{java.awt.datatransfer.DataFlavor.javaFileListFlavor};
+            }
+            public boolean isDataFlavorSupported(java.awt.datatransfer.DataFlavor flavor) {
+                return java.awt.datatransfer.DataFlavor.javaFileListFlavor.equals(flavor);
+            }
+            public Object getTransferData(java.awt.datatransfer.DataFlavor flavor) { return List.of(files); }
+        };
     }
     private static JEditorPane pane(Container container) {
         for (Component child : container.getComponents()) {

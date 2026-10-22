@@ -13,21 +13,21 @@ O repositório contém os fontes, recursos, testes, scripts e documentação. JA
 ## Funcionalidades
 
 - Interface Swing com tema Nimbus, botão de seleção no canto superior direito, suporte a arrastar um arquivo para a janela e resumo da validação abaixo.
-- Validação automática em segundo plano ao escolher um documento.
-- Verificação de PDF/PAdES, XML/XMLDSig/XAdES e CMS/CAdES conforme o suporte do motor.
-- Associação de documento original para assinaturas destacadas pelo menu **Opções**, com nova validação automática.
+- A interface aceita somente arquivos `.pdf` na seleção e no arrastar e soltar, com validação automática em segundo plano.
+- Verificação de PDF/PAdES na interface. O motor mantém suporte a XML/XMLDSig/XAdES e CMS/CAdES para integrações.
 - Um arquivo por vez, com indicação de processamento e seleção bloqueada até a conclusão.
 - Resultado por arquivo, signatário, integridade, cifra assimétrica, cadeia de certificação, política e mensagens do motor.
-- Exportação do resultado atual em PDF, HTML, XML e JSON. XML/JSON incluem o relatório técnico completo do núcleo. PDF inclui resumo do arquivo e relatórios técnicos dos documentos verificáveis; HTML apresenta um resumo legível.
+- Rodapé com a frase “projeto open source hospedado no github”, com link na palavra “github”.
+- A camada de serviços mantém exportação PDF, HTML, XML e JSON para integrações; a interface apresenta o resumo da validação.
 - Atualização das raízes de assinatura v5, v6, v12 e v13 e do pacote oficial vigente de ACs do ITI por HTTPS, com conferência SHA-512 do pacote e preservação dos itens anteriores em caso de falha.
 
 ## Uso
 
-1. Clique em **Selecionar arquivo…**, no canto superior direito, ou arraste um documento assinado para a janela. A validação começa automaticamente. É aceito um arquivo por vez.
+1. Clique em **Selecionar arquivo…**, no canto superior direito, ou arraste um PDF assinado para a janela. A validação começa automaticamente. É aceito um arquivo por vez.
 2. Consulte o **Resumo da validação** logo abaixo do botão.
-3. Para uma assinatura destacada, use **Opções → Vincular documento original…**. Ao escolher o original, a validação é refeita automaticamente.
-4. Para guardar o resultado, use **Opções → Exportar relatório…** antes de escolher outro documento.
-5. Atualização de certificados e configurações também estão no menu **Opções**.
+3. O link no rodapé abre o repositório do projeto no navegador.
+
+A interface não possui menu. A associação de documentos originais para assinaturas destacadas e a exportação continuam disponíveis na camada de serviços, sem controles nesta tela.
 
 O resultado atual fica em memória e é substituído ao selecionar outro arquivo. Os arquivos originais não são modificados nem enviados ao serviço web do ITI. O motor pode consultar serviços externos de certificados, revogação e políticas.
 
@@ -84,9 +84,9 @@ As intermediárias vêm da **Cadeia Vigente** do [pacote oficial de ACs do ITI](
 
 O pacote fornece somente candidatos de AC intermediária para construir cadeias. Certificados de titular são rejeitados e certificados com emissor igual ao titular são excluídos da importação. Nenhum certificado do pacote é promovido a âncora de confiança. Cada assinatura ainda precisa de uma cadeia válida até uma raiz instalada, validade temporal, revogação e demais verificações do motor.
 
-A primeira validação tenta obter o pacote caso ele não esteja instalado. **Opções → Atualizar certificados** atualiza raízes e intermediárias. Se o primeiro download das intermediárias falhar, o aplicativo tenta validar com os certificados da assinatura, o cache e AIA; a ausência de uma cadeia completa não é aprovação.
+A primeira validação tenta obter o pacote caso ele não esteja instalado. A interface prepara automaticamente as raízes ausentes e o pacote de intermediárias ainda não instalado. Se o primeiro download das intermediárias falhar, o aplicativo tenta validar com os certificados da assinatura, o cache e AIA; a ausência de uma cadeia completa não é aprovação.
 
-**Sobre e configurações** permite abrir as pastas. Para uso sem download, é possível instalar manualmente certificados raiz `.crt`, `.cer` ou `.pem` obtidos de fonte confiável. Esses arquivos definem o conjunto de confiança; adicionar outra raiz muda quais cadeias o aplicativo aceita. Não coloque certificados de signatários ou intermediárias nessa pasta.
+Para uso sem download, é possível instalar manualmente certificados raiz `.crt`, `.cer` ou `.pem` obtidos de fonte confiável. Esses arquivos definem o conjunto de confiança; adicionar outra raiz muda quais cadeias o aplicativo aceita. Não coloque certificados de signatários ou intermediárias nessa pasta.
 
 ## Limites e validação
 

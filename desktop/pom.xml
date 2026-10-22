@@ -1,19 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0">
   <modelVersion>4.0.0</modelVersion>
-  <parent><groupId>br.com.verificador</groupId><artifactId>verificador-icp-desktop-parent</artifactId><version>0.1.0</version></parent>
+  <parent>
+    <groupId>br.com.verificador</groupId>
+    <artifactId>verificador-icp-desktop-parent</artifactId>
+    <version>0.1.0</version>
+  </parent>
   <artifactId>verificador-desktop</artifactId>
   <dependencies>
-    <dependency><groupId>br.com.verificador</groupId><artifactId>verificador-engine</artifactId><version>${project.version}</version>
-      <exclusions><exclusion><groupId>commons-logging</groupId><artifactId>commons-logging</artifactId></exclusion></exclusions>
+    <dependency>
+      <groupId>br.com.verificador</groupId>
+      <artifactId>verificador-engine</artifactId>
+      <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
-    <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter</artifactId><version>3.4.1</version></dependency>
-    <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><version>5.11.4</version><scope>test</scope></dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+      <version>3.4.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.11.4</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
-  <build><finalName>verificador-desktop</finalName><plugins>
-    <plugin><groupId>org.springframework.boot</groupId><artifactId>spring-boot-maven-plugin</artifactId><version>3.4.1</version>
-      <configuration><mainClass>br.com.verificador.desktop.VerifierDesktopApplication</mainClass></configuration>
-      <executions><execution><goals><goal>repackage</goal></goals></execution></executions>
-    </plugin>
-  </plugins></build>
+  <build>
+    <finalName>verificador-desktop</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>3.4.1</version>
+        <configuration>
+          <mainClass>br.com.verificador.desktop.VerifierDesktopApplication</mainClass>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

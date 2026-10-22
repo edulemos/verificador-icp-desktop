@@ -34,7 +34,7 @@ class SummaryPreviewTest {
         SwingUtilities.invokeAndWait(() -> {
             try {
                 for (var look : UIManager.getInstalledLookAndFeels()) if ("Nimbus".equals(look.getName())) UIManager.setLookAndFeel(look.getClassName());
-                var frame = new SwingMainFrame(engine, new TrustAnchorService(paths), new ReportExportService(), paths);
+                var frame = new SwingMainFrame(engine, new TrustAnchorService(paths), paths);
                 try {
                     frame.addNotify(); frame.displayResult(result);
                     frame.getContentPane().setSize(1200, 820); layout(frame.getContentPane());

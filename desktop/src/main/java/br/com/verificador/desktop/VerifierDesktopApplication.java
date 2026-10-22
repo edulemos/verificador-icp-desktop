@@ -2,7 +2,6 @@ package br.com.verificador.desktop;
 
 import br.com.verificador.desktop.config.AppPaths;
 import br.com.verificador.desktop.engine.VerificationEngine;
-import br.com.verificador.desktop.service.ReportExportService;
 import br.com.verificador.desktop.service.TrustAnchorService;
 import br.com.verificador.desktop.ui.SwingMainFrame;
 import java.awt.event.WindowAdapter;
@@ -26,7 +25,7 @@ public class VerifierDesktopApplication {
         SwingUtilities.invokeLater(() -> {
             try {
                 UIManager.setLookAndFeel(new javax.swing.plaf.nimbus.NimbusLookAndFeel());
-                var frame = new SwingMainFrame(context.getBean(VerificationEngine.class), context.getBean(TrustAnchorService.class), context.getBean(ReportExportService.class), paths);
+                var frame = new SwingMainFrame(context.getBean(VerificationEngine.class), context.getBean(TrustAnchorService.class), paths);
                 frame.addWindowListener(new WindowAdapter() { @Override public void windowClosed(WindowEvent event) { context.close(); } });
                 if (smoke) {
                     frame.addNotify();
