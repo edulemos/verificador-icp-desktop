@@ -1,0 +1,99 @@
+VERIFICADOR ICP-BRASIL DESKTOP
+=============================
+
+Repositório: https://github.com/edulemos/verificador-icp-desktop
+
+Aplicativo desktop Java Swing para verificar assinaturas digitais localmente,
+com tema Nimbus e motor de referência LABSEC/UFSC 2.7.
+
+RECURSOS
+
+- Selecione um arquivo ou arraste-o para a janela para iniciar a validação.
+- Consulte o resumo, os dados do signatário e o resultado por assinatura.
+- Verifique PDF/PAdES, XML/XMLDSig/XAdES e CMS/CAdES, conforme o suporte do motor.
+- Vincule o documento original de assinaturas destacadas pelo menu Opções.
+- Exporte o resultado em PDF, HTML, XML ou JSON.
+- Atualize as raízes e o pacote de intermediárias do repositório oficial do ITI.
+
+REQUISITOS
+
+- JDK 17 ou superior; desenvolvimento e testes realizados com JDK 21.
+- Apache Maven disponível no PATH.
+- Interface gráfica disponível para executar o aplicativo.
+- Internet para baixar dependências e atualizar certificados. A validação pode
+  consultar serviços de revogação, certificados e políticas.
+
+COMPILAR E TESTAR
+
+Na pasta do projeto:
+
+  mvn -s scripts/maven-settings.xml clean package
+
+No Windows, também é possível executar:
+
+  build.bat
+
+O build gera desktop/target/verificador-desktop.jar. O script build.bat também
+prepara a pasta release para execução local.
+
+EXECUTAR
+
+  java -jar desktop/target/verificador-desktop.jar
+
+No Windows, após compilar, abra iniciar.bat na raiz do projeto.
+
+Para gerar a versão portátil para Windows, com jlink e jpackage no PATH:
+
+  powershell -ExecutionPolicy Bypass -File scripts/package-portable.ps1
+
+O script requer o JAR compilado e um destino portable/VerificadorICP ainda
+inexistente. A distribuição portátil precisa manter sua pasta inteira.
+
+ESTRUTURA
+
+  desktop/src/main/   Interface, configuração, serviços e integração do motor.
+  desktop/src/test/   Testes automatizados com certificados gerados localmente.
+  engine/src/main/    Motor de referência e recursos XSL, XSD e políticas.
+  scripts/           Configuração Maven e scripts de distribuição.
+  engine/LICENSE     Licença preservada do motor de referência.
+  README.md          Documentação detalhada.
+  THIRD-PARTY-NOTICES.md  Origem e avisos sobre componentes de terceiros.
+
+DADOS E CERTIFICADOS
+
+No Windows, os dados ficam em:
+
+  %LOCALAPPDATA%/VerificadorICPDesktop
+
+As raízes de confiança ficam em trust-anchors. O pacote de intermediárias fica
+em intermediates. Também existem pastas de cache, repositório e logs.
+O menu Opções permite atualizar certificados e consultar os caminhos locais.
+
+Para escolher outra pasta de dados:
+
+  java -Dverificador.dataDir=C:/meus-dados/verificador -jar desktop/target/verificador-desktop.jar
+
+As raízes v5, v6, v12 e v13 são baixadas separadamente por HTTPS do repositório
+oficial da AC-Raiz. O pacote de ACs é conferido com o SHA-512 publicado pelo ITI.
+As intermediárias ajudam a construir cadeias, sem se tornar raízes confiáveis.
+Uma atualização que falha preserva a versão anterior do item correspondente.
+
+ESCOPO DO REPOSITÓRIO
+
+São versionados apenas fontes, recursos necessários à compilação, testes,
+scripts, configuração de build, documentação e avisos de licença.
+JARs, executáveis, runtime, caches, logs, certificados de uso local e documentos
+assinados usados manualmente não fazem parte da publicação.
+As dependências são resolvidas pelo Maven; os binários devem ser compilados.
+
+LIMITES
+
+- Um arquivo por vez, com limite de 100 MB por arquivo.
+- Os arquivos originais não são modificados nem enviados ao serviço web do ITI.
+- O resultado atual fica em memória; exporte-o antes de escolher outro arquivo.
+- A falta de cadeia ou dados de revogação pode impedir uma conclusão.
+- O aplicativo é independente e não é o serviço oficial ou homologado do ITI.
+- O suporte depende do motor e dos algoritmos disponíveis. A cadeia v7/Ed521
+  continua sem suporte, mesmo com Bouncy Castle 1.86.
+
+Consulte README.md para detalhes de funcionamento, testes e limitações.

@@ -1,0 +1,28 @@
+**/target/
+.maven-cache/
+.runtime/
+release/
+*.log
+*.lck
+.idea/
+.vscode/
+
+# Documentos de uso local e artefatos de ferramentas
+/docs/
+/.github/modernize/
+
+# Compilação e distribuição: este repositório contém os fontes
+*.class
+*.jar
+*.war
+*.exe
+*.msi
+*.zip
+
+# Configurações e credenciais locais
+.env
+.env.*
+!.env.example
+*.p12
+*.pfx
+*.key
